@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F4A460"/>
+      <stop offset="100%" stop-color="#FF8C42"/>
+    </linearGradient>
+  </defs>
+  <!-- 背景圆 -->
+  <circle cx="96" cy="96" r="92" fill="url(#bg)"/>
+  <!-- 爪印主体 -->
+  <ellipse cx="96" cy="120" rx="38" ry="30" fill="#fff" opacity="0.95"/>
+  <!-- 爪印趾头 -->
+  <circle cx="60" cy="70" r="18" fill="#fff" opacity="0.95"/>
+  <circle cx="96" cy="52" r="20" fill="#fff" opacity="0.95"/>
+  <circle cx="132" cy="70" r="18" fill="#fff" opacity="0.95"/>
+  <!-- 趾头高光 -->
+  <circle cx="58" cy="67" r="6" fill="#F4A460" opacity="0.5"/>
+  <circle cx="94" cy="48" r="7" fill="#F4A460" opacity="0.5"/>
+  <circle cx="130" cy="67" r="6" fill="#F4A460" opacity="0.5"/>
+  <ellipse cx="94" cy="118" rx="12" ry="10" fill="#F4A460" opacity="0.5"/>
+</svg>

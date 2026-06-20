@@ -1,0 +1,231 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   PetMate Design System v2.0
+   设计理念：温暖 × 柔软 × 治愈
+   色彩基调：阳光奶茶暖棕
+   ============================================================ */
+
+@theme inline {
+  /* ── 字体 ── */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+
+  /* ── 圆角（更圆润） ── */
+  --radius-sm:  0.5rem;
+  --radius-md:  0.75rem;
+  --radius-lg:  1rem;
+  --radius-xl:  1.25rem;
+  --radius-2xl: 1.5rem;
+
+  /* ── 阴影（暖棕低饱和度） ── */
+  --shadow-xs:  0 1px 2px  rgba(74, 55, 40, 0.04);
+  --shadow-sm:  0 2px 8px  rgba(74, 55, 40, 0.06);
+  --shadow-md:  0 4px 16px rgba(74, 55, 40, 0.08);
+  --shadow-lg:  0 8px 32px rgba(74, 55, 40, 0.10);
+
+  /* ── 主色：奶油暖橘 ── */
+  --color-primary-50:  #FFF8F0;
+  --color-primary-100: #FFECD5;
+  --color-primary-200: #FFD9B0;
+  --color-primary-300: #FFC080;
+  --color-primary-400: #FFA040;
+  --color-primary-500: #F4853A;
+  --color-primary-600: #D4682A;
+  --color-primary-700: #A84D1E;
+
+  /* ── 背景：暖奶油白 ── */
+  --color-bg:          #FDF9F5;
+  --color-surface:     #FFFFFF;
+  --color-border:      #F0E6DC;
+
+  /* ── 文字：暖深棕 ── */
+  --color-text:        #4A3728;
+  --color-text-secondary: #9B8575;
+  --color-text-muted:     #C4B5A5;
+
+  /* ── 语义色：柔和版 ── */
+  --color-success:     #6BAF7B;
+  --color-warning:     #F0A050;
+  --color-danger:      #E87060;
+  --color-info:        #7AADDB;
+
+  /* ── shadcn 兼容映射 ── */
+  --color-background:          var(--color-bg);
+  --color-foreground:          var(--color-text);
+  --color-card:                var(--color-surface);
+  --color-card-foreground:     var(--color-text);
+  --color-popover:             var(--color-surface);
+  --color-popover-foreground:  var(--color-text);
+  --color-primary:             var(--color-primary-500);
+  --color-primary-foreground:  #FFFFFF;
+  --color-secondary:           var(--color-primary-100);
+  --color-secondary-foreground: var(--color-primary-700);
+  --color-muted:               var(--color-border);
+  --color-muted-foreground:    var(--color-text-secondary);
+  --color-accent:              var(--color-primary-50);
+  --color-accent-foreground:   var(--color-primary-700);
+  --color-destructive:         var(--color-danger);
+  --color-destructive-foreground: #FFFFFF;
+  --color-border:              var(--color-border);
+  --color-input:               var(--color-border);
+  --color-ring:                var(--color-primary-200);
+  --color-sidebar-ring:        var(--color-primary-200);
+  --color-sidebar-border:      var(--color-border);
+  --color-sidebar-accent-foreground: var(--color-primary-700);
+  --color-sidebar-accent:      var(--color-primary-50);
+  --color-sidebar-primary-foreground: #FFFFFF;
+  --color-sidebar-primary:     var(--color-primary-500);
+  --color-sidebar-foreground:  var(--color-text);
+  --color-sidebar:             var(--color-surface);
+  --color-chart-1: var(--color-primary-400);
+  --color-chart-2: var(--color-warning);
+  --color-chart-3: var(--color-success);
+  --color-chart-4: var(--color-info);
+  --color-chart-5: var(--color-danger);
+}
+
+/* ── 根变量 ── */
+:root {
+  --background: #FDF9F5;
+  --foreground: #4A3728;
+  --card: #FFFFFF;
+  --card-foreground: #4A3728;
+  --popover: #FFFFFF;
+  --popover-foreground: #4A3728;
+  --primary: #F4853A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FFECD5;
+  --secondary-foreground: #A84D1E;
+  --muted: #F0E6DC;
+  --muted-foreground: #9B8575;
+  --accent: #FFF8F0;
+  --accent-foreground: #A84D1E;
+  --destructive: #E87060;
+  --destructive-foreground: #FFFFFF;
+  --border: #F0E6DC;
+  --input: #F0E6DC;
+  --ring: #FFC080;
+  --radius: 0.75rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #4A3728;
+  --sidebar-primary: #F4853A;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFF8F0;
+  --sidebar-accent-foreground: #A84D1E;
+  --sidebar-border: #F0E6DC;
+  --sidebar-ring: #FFC080;
+}
+
+/* ── 暗色模式 ── */
+.dark {
+  --background: #2A2218;
+  --foreground: #F0E6DC;
+  --card: #352B20;
+  --card-foreground: #F0E6DC;
+  --popover: #352B20;
+  --popover-foreground: #F0E6DC;
+  --primary: #FFA040;
+  --primary-foreground: #2A2218;
+  --secondary: #3D3025;
+  --secondary-foreground: #F0E6DC;
+  --muted: #3D3025;
+  --muted-foreground: #9B8575;
+  --accent: #3D3025;
+  --accent-foreground: #F0E6DC;
+  --destructive: #E87060;
+  --destructive-foreground: #FFFFFF;
+  --border: #3D3025;
+  --input: #3D3025;
+  --ring: #F4853A;
+}
+
+/* ── 基础层 ── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  html {
+    @apply font-sans;
+  }
+  ::selection {
+    background: #FFECD5;
+    color: #4A3728;
+  }
+}
+
+/* ── 工具类 ── */
+@utility btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-primary
+         px-5 py-2.5 text-sm font-medium text-primary-foreground
+         transition-all duration-150
+         hover:brightness-90 active:scale-97
+         focus-visible:ring-2 focus-visible:ring-ring
+         disabled:opacity-50 disabled:pointer-events-none;
+}
+
+@utility btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl bg-secondary
+         px-5 py-2.5 text-sm font-medium text-secondary-foreground
+         transition-all duration-150
+         hover:brightness-95 active:scale-97
+         focus-visible:ring-2 focus-visible:ring-ring
+         disabled:opacity-50 disabled:pointer-events-none;
+}
+
+@utility card-pet {
+  @apply rounded-2xl border border-border bg-card p-5
+         shadow-sm transition-all duration-200
+         hover:shadow-md hover:-translate-y-0.5;
+}
+
+/* ── 动画 ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-fade-in-up { animation: fadeInUp 0.4s ease-out; }
+.animate-bounce-in { animation: bounceIn 0.5s ease-out; }
+
+/* ── 滚动条 ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #F0E6DC; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #D4C4B0; }
+
+/* ── 图标按钮通用 ── */
+.icon-btn {
+  @apply inline-flex items-center justify-center rounded-lg p-2
+         text-muted-foreground transition-colors duration-150
+         hover:bg-accent hover:text-foreground;
+}
+
+/* ── 表单 ── */
+.input-pet {
+  @apply w-full rounded-xl border border-border bg-card px-4 py-2.5
+         text-sm text-foreground placeholder:text-muted-foreground/60
+         transition-all duration-150
+         focus:border-primary-400 focus:ring-2 focus:ring-primary-200/50
+         focus:outline-none;
+}

@@ -35,7 +35,7 @@ jobs:
         run: |
           cd ios/App
           xcodebuild \
-            -workspace App.xcworkspace \
+            -project App.xcodeproj \
             -scheme App \
             -sdk iphoneos \
             -configuration Release \
@@ -45,8 +45,8 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
 
-      - name: Upload App Archive
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
           name: PetMate-iOS
-          path: ios/App/build/*.xcarchive
+          path: ios/App/build/App.xcarchive

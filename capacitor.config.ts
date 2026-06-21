@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.petmate.app',
+  appId: 'com.MrGaryW.petmate',
   appName: 'PetMate',
   webDir: 'out',
   server: {

@@ -33,6 +33,11 @@ jobs:
 
       - name: Build iOS Archive
         run: |
+          AUTH_KEY_DIR="$HOME/.appstoreconnect/private_keys"
+          mkdir -p "$AUTH_KEY_DIR"
+          echo "${{ secrets.APPSTORE_KEY_P8 }}" > "$AUTH_KEY_DIR/AuthKey_${{ secrets.APPSTORE_KEY_ID }}.p8"
+          AUTH_KEY_PATH="$AUTH_KEY_DIR/AuthKey_${{ secrets.APPSTORE_KEY_ID }}.p8"
+
           cd ios/App
           xcodebuild \
             -project App.xcodeproj \
@@ -42,8 +47,11 @@ jobs:
             -archivePath $PWD/build/App.xcarchive \
             archive \
             DEVELOPMENT_TEAM=GZ5765LM2A \
-            CODE_SIGN_IDENTITY="Apple Development" \
-            CODE_SIGN_STYLE=Automatic
+            CODE_SIGN_STYLE=Automatic \
+            -allowProvisioningUpdates \
+            -authenticationKeyID ${{ secrets.APPSTORE_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APPSTORE_ISSUER_ID }} \
+            -authenticationKeyPath "$AUTH_KEY_PATH"
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4

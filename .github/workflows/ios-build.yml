@@ -41,9 +41,9 @@ jobs:
             -configuration Release \
             -archivePath $PWD/build/App.xcarchive \
             archive \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            DEVELOPMENT_TEAM=GZ5765LM2A \
+            CODE_SIGN_IDENTITY="Apple Development" \
+            CODE_SIGN_STYLE=Automatic
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4

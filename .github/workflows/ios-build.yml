@@ -31,8 +31,11 @@ jobs:
       - name: Sync iOS
         run: npx cap sync ios
 
-      - name: Build iOS Archive
+      - name: Build & Sign Archive
         run: |
+          AUTH_KEY_DIR="$HOME/.appstoreconnect/private_keys"
+          mkdir -p "$AUTH_KEY_DIR"
+          echo "${{ secrets.APPSTORE_KEY_P8 }}" > "$AUTH_KEY_DIR/AuthKey_${{ secrets.APPSTORE_KEY_ID }}.p8"
           cd ios/App
           xcodebuild \
             -project App.xcodeproj \
@@ -42,23 +45,43 @@ jobs:
             -archivePath $PWD/build/App.xcarchive \
             archive \
             DEVELOPMENT_TEAM=GZ5765LM2A \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGN_STYLE=Automatic \
+            -allowProvisioningUpdates \
+            -authenticationKeyID ${{ secrets.APPSTORE_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APPSTORE_ISSUER_ID }} \
+            -authenticationKeyPath "$AUTH_KEY_DIR/AuthKey_${{ secrets.APPSTORE_KEY_ID }}.p8"
 
-      - name: Inject Team ID into Archive
+      - name: Export IPA
         run: |
-          INFO_PLIST="ios/App/build/App.xcarchive/Info.plist"
-          echo "=== Before ==="
-          /usr/libexec/PlistBuddy -c "Print" "$INFO_PLIST" 2>&1 | head -3
-          /usr/libexec/PlistBuddy -c "Delete :ApplicationProperties" "$INFO_PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :ApplicationProperties dict" "$INFO_PLIST"
-          /usr/libexec/PlistBuddy -c "Add :ApplicationProperties:Team string GZ5765LM2A" "$INFO_PLIST"
-          /usr/libexec/PlistBuddy -c "Add :ApplicationProperties:SigningIdentity string Apple Development" "$INFO_PLIST"
-          echo "=== After ==="
-          /usr/libexec/PlistBuddy -c "Print :ApplicationProperties" "$INFO_PLIST"
+          cat > export.plist << PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+          <key>method</key><string>app-store-connect</string>
+          <key>teamID</key><string>GZ5765LM2A</string>
+          </dict></plist>
+          PLIST
+          AUTH_KEY_DIR="$HOME/.appstoreconnect/private_keys"
+          xcodebuild -exportArchive \
+            -archivePath ios/App/build/App.xcarchive \
+            -exportPath ios/App/build \
+            -exportOptionsPlist export.plist \
+            -allowProvisioningUpdates \
+            -authenticationKeyID ${{ secrets.APPSTORE_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.APPSTORE_ISSUER_ID }} \
+            -authenticationKeyPath "$AUTH_KEY_DIR/AuthKey_${{ secrets.APPSTORE_KEY_ID }}.p8"
 
-      - name: Upload Archive
+      - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PetMate-xcarchive
-          path: ios/App/build/App.xcarchive
+          name: PetMate-IPA
+          path: ios/App/build/PetMate.ipa
+
+      - name: Upload to TestFlight
+        run: |
+          xcrun altool --upload-app \
+            -f ios/App/build/PetMate.ipa \
+            -t ios \
+            --apiKey ${{ secrets.APPSTORE_KEY_ID }} \
+            --apiIssuer ${{ secrets.APPSTORE_ISSUER_ID }} \
+            --verbose

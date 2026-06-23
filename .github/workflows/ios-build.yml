@@ -45,6 +45,18 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
 
+      - name: Inject Team ID into Archive
+        run: |
+          INFO_PLIST="ios/App/build/App.xcarchive/Info.plist"
+          echo "=== Before ==="
+          /usr/libexec/PlistBuddy -c "Print" "$INFO_PLIST" 2>&1 | head -3
+          /usr/libexec/PlistBuddy -c "Delete :ApplicationProperties" "$INFO_PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :ApplicationProperties dict" "$INFO_PLIST"
+          /usr/libexec/PlistBuddy -c "Add :ApplicationProperties:Team string GZ5765LM2A" "$INFO_PLIST"
+          /usr/libexec/PlistBuddy -c "Add :ApplicationProperties:SigningIdentity string Apple Development" "$INFO_PLIST"
+          echo "=== After ==="
+          /usr/libexec/PlistBuddy -c "Print :ApplicationProperties" "$INFO_PLIST"
+
       - name: Upload Archive
         uses: actions/upload-artifact@v4
         with:

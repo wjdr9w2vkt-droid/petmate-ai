@@ -1,4 +1,4 @@
-name: Build iOS App
+name: Build & Sign iOS
 
 on:
   push:
@@ -28,10 +28,14 @@ jobs:
           </head><body></body></html>
           HTML
 
+      - name: Fix SPM paths
+        run: |
+          find ios -name "Package.swift" -exec sed -i '' 's/\\\\/\//g' {} \;
+
       - name: Sync iOS
         run: npx cap sync ios
 
-      - name: Build iOS Archive
+      - name: Build Archive
         run: |
           cd ios/App
           xcodebuild \
@@ -41,9 +45,8 @@ jobs:
             -configuration Release \
             -archivePath $PWD/build/App.xcarchive \
             archive \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            DEVELOPMENT_TEAM=GZ5765LM2A \
+            CODE_SIGN_STYLE=Automatic
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4

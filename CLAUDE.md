@@ -92,19 +92,36 @@ Button 用 `@base-ui/react`, 不支持 `asChild`。用 `<Link>` 样式或 `<Butt
 
 完成: 用户认证, 宠物CRUD, 成长记录+趋势图, 疫苗管理, AI助手, Dashboard, 时间轴, 提醒中心, 纪念相册, PWA, Capacitor iOS, 暗色模式, 爪印背景
 
-已知: snake_case 统一转换待做, TestFlight 需 Distribution 证书
+已知: snake_case 统一转换待做（`data-mapper.ts` 已备好未接入）, TestFlight 需 Distribution 证书
+
+⚠️ **重要教训（2026-07 曾踩坑）**:
+1. Vercel 每次 `vercel --prod` 不指定域名都会生成一个新的随机子域名
+   (`petmate-xxxxx-wjdr9w2vkt-droids-projects.vercel.app`)，这类域名默认开启
+   Vercel Deployment Protection（SSO 墙），**外部用户/App 内嵌 WebView 完全打不开**。
+   **永远使用固定别名 `https://project-4v5mr.vercel.app`**（每次部署会自动更新指向最新
+   production 部署，不会失效），不要把随机域名写进 capacitor.config.ts / Supabase Auth
+   URL Configuration / 任何文档里。
+2. Supabase 免费项目长期不活跃可能被暂停继而清除，DNS 会变成 NXDOMAIN（不是网络问题，
+   是项目真的没了）。如果任何 Supabase 请求突然全部失败，先用
+   `nslookup <project-ref>.supabase.co 1.1.1.1` 排查域名是否还存在。
+3. 数据获取类 hook 的 `fetchXxx` 函数必须包 try/catch/finally，否则网络层面的 reject
+   （不是 Supabase 返回的 `{error}` 字段，是 fetch 真的抛异常）会导致 `isLoading` 永远
+   卡 `true`，页面无限骨架屏且控制台无明显报错。已在 6 个 hook + AuthProvider 修复过，
+   新增 hook 时照此模式写。
 
 ---
 
 ## 七、线上地址 & 环境变量
 
 ```
-Vercel:  petmate-*.vercel.app (push main 自动部署)
+Vercel (固定别名, 务必使用):  https://project-4v5mr.vercel.app
 GitHub:  github.com/wjdr9w2vkt-droid/petmate-ai
-Supabase: cjlwrsmzqmbcnernmkkv.supabase.co
+Supabase: ugdwvaoctafwpgqgzlte.supabase.co (2026-07 因原项目被清除而重建，
+          原项目 cjlwrsmzqmbcnernmkkv 已不存在，历史记录中出现的都是旧值)
 
-NEXT_PUBLIC_SUPABASE_URL=https://cjlwrsmzqmbcnernmkkv.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_8H-AHmtsTAu4japf4KGdAQ_ZdLc7rwb
+NEXT_PUBLIC_SUPABASE_URL=https://ugdwvaoctafwpgqgzlte.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_wuKop67tytmdPRYAlM3mwg_ZilL4Hpf
+# service_role key 见 .env.local（不进 git）
 # AI Key: 用户在 /profile 自行配置, localStorage 存储
 ```
 

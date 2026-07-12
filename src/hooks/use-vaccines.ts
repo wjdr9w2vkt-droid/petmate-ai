@@ -19,18 +19,25 @@ export function useVaccines() {
   const fetchVaccines = useCallback(
     async (petId: string) => {
       setIsLoading(true)
-      const { data, error } = await supabase
-        .from('vaccinations')
-        .select('*')
-        .eq('pet_id', petId)
-        .order('vaccinated_at', { ascending: false })
+      try {
+        const { data, error } = await supabase
+          .from('vaccinations')
+          .select('*')
+          .eq('pet_id', petId)
+          .order('vaccinated_at', { ascending: false })
 
-      if (error) {
-        console.error('[useVaccines] fetchVaccines error:', error)
-      } else {
-        setVaccines(data as Vaccination[])
+        if (error) {
+          console.error('[useVaccines] fetchVaccines error:', error)
+          toast.error('加载疫苗记录失败')
+        } else {
+          setVaccines(data as Vaccination[])
+        }
+      } catch (err) {
+        console.error('[useVaccines] fetchVaccines network error:', err)
+        toast.error('网络异常，请检查网络连接')
+      } finally {
+        setIsLoading(false)
       }
-      setIsLoading(false)
     },
     [supabase]
   )

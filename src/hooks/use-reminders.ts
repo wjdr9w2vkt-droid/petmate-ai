@@ -36,11 +36,22 @@ export function useReminders(petId?: string) {
 
   const fetchReminders = useCallback(async () => {
     setIsLoading(true)
-    let q = supabase.from('reminders').select('*').order('due_date', { ascending: true })
-    if (petId) q = q.eq('pet_id', petId)
-    const { data, error } = await q
-    if (!error && data) setReminders(data as Reminder[])
-    setIsLoading(false)
+    try {
+      let q = supabase.from('reminders').select('*').order('due_date', { ascending: true })
+      if (petId) q = q.eq('pet_id', petId)
+      const { data, error } = await q
+      if (error) {
+        console.error('[useReminders] fetchReminders error:', error)
+        toast.error('加载提醒失败')
+      } else if (data) {
+        setReminders(data as Reminder[])
+      }
+    } catch (err) {
+      console.error('[useReminders] fetchReminders network error:', err)
+      toast.error('网络异常，请检查网络连接')
+    } finally {
+      setIsLoading(false)
+    }
   }, [petId, supabase])
 
   const createReminder = useCallback(

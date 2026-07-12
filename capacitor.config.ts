@@ -5,14 +5,15 @@ const config: CapacitorConfig = {
   appName: 'PetMate',
   webDir: 'out',
   server: {
-    url: 'https://petmate-nomjtnjor-wjdr9w2vkt-droids-projects.vercel.app',
+    // 固定别名，不会随每次 vercel --prod 部署而改变（不要换成 petmate-xxxxx-*.vercel.app 那种随机域名，
+    // 那种域名默认带 Vercel Deployment Protection/SSO，外部用户和 App 内嵌 WebView 都打不开）
+    url: 'https://project-4v5mr.vercel.app',
     cleartext: false,
     allowNavigation: ['*'],
   },
   ios: {
     contentInset: 'automatic',
     allowsLinkPreview: false,
-    preferSwiftPackageManager: true,
     scheme: 'App',
   },
   plugins: {

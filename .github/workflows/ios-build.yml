@@ -24,7 +24,7 @@ jobs:
           cat > out/index.html << 'HTML'
           <!DOCTYPE html>
           <html><head>
-          <meta http-equiv="refresh" content="0;url=https://petmate-nomjtnjor-wjdr9w2vkt-droids-projects.vercel.app">
+          <meta http-equiv="refresh" content="0;url=https://project-4v5mr.vercel.app">
           </head><body></body></html>
           HTML
 

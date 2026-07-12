@@ -16,13 +16,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const supabase = createClient()
 
     // 1. 首次加载：获取当前 session
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        setAuth(data.session.user, data.session)
-      } else {
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (data.session) {
+          setAuth(data.session.user, data.session)
+        } else {
+          clearAuth()
+        }
+      })
+      .catch((err) => {
+        // 网络异常或后端不可达时，避免 isLoading 永远卡在 true
+        console.error('[AuthProvider] getSession failed:', err)
         clearAuth()
-      }
-    })
+      })
 
     // 2. 监听后续 auth 事件（登录/登出/token刷新）
     const {

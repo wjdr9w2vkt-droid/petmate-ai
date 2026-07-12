@@ -19,24 +19,30 @@ export function useRecords() {
   const fetchRecords = useCallback(
     async (petId?: string) => {
       setIsLoading(true)
-      let query = supabase
-        .from('growth_records')
-        .select('*')
-        .order('recorded_at', { ascending: false })
+      try {
+        let query = supabase
+          .from('growth_records')
+          .select('*')
+          .order('recorded_at', { ascending: false })
 
-      if (petId) {
-        query = query.eq('pet_id', petId)
+        if (petId) {
+          query = query.eq('pet_id', petId)
+        }
+
+        const { data, error } = await query
+
+        if (error) {
+          console.error('[useRecords] fetchRecords error:', error)
+          toast.error('加载记录失败')
+        } else {
+          setRecords(data as GrowthRecord[])
+        }
+      } catch (err) {
+        console.error('[useRecords] fetchRecords network error:', err)
+        toast.error('网络异常，请检查网络连接')
+      } finally {
+        setIsLoading(false)
       }
-
-      const { data, error } = await query
-
-      if (error) {
-        console.error('[useRecords] fetchRecords error:', error)
-        toast.error('加载记录失败')
-      } else {
-        setRecords(data as GrowthRecord[])
-      }
-      setIsLoading(false)
     },
     [supabase]
   )

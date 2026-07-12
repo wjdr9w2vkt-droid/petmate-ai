@@ -34,18 +34,25 @@ export function useTimeline(petId: string) {
 
   const fetchEvents = useCallback(async () => {
     setIsLoading(true)
-    const { data, error } = await supabase
-      .from('timeline_events')
-      .select('*')
-      .eq('pet_id', petId)
-      .order('event_date', { ascending: false })
+    try {
+      const { data, error } = await supabase
+        .from('timeline_events')
+        .select('*')
+        .eq('pet_id', petId)
+        .order('event_date', { ascending: false })
 
-    if (error) {
-      console.error('[useTimeline] fetchEvents error:', error)
-    } else {
-      setEvents(data as TimelineEvent[])
+      if (error) {
+        console.error('[useTimeline] fetchEvents error:', error)
+        toast.error('加载时间轴失败')
+      } else {
+        setEvents(data as TimelineEvent[])
+      }
+    } catch (err) {
+      console.error('[useTimeline] fetchEvents network error:', err)
+      toast.error('网络异常，请检查网络连接')
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }, [petId, supabase])
 
   const createEvent = useCallback(

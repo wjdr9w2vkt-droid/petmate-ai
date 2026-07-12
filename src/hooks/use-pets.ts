@@ -19,18 +19,24 @@ export function usePets() {
   /** 获取当前用户的所有宠物 */
   const fetchPets = useCallback(async () => {
     setIsLoading(true)
-    const { data, error } = await supabase
-      .from('pets')
-      .select('*')
-      .order('created_at', { ascending: false })
+    try {
+      const { data, error } = await supabase
+        .from('pets')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-    if (error) {
-      console.error('[usePets] fetchPets error:', error)
-      toast.error('加载宠物列表失败')
-    } else {
-      setPets(data as Pet[])
+      if (error) {
+        console.error('[usePets] fetchPets error:', error)
+        toast.error('加载宠物列表失败')
+      } else {
+        setPets(data as Pet[])
+      }
+    } catch (err) {
+      console.error('[usePets] fetchPets network error:', err)
+      toast.error('网络异常，请检查网络连接')
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }, [supabase])
 
   /** 获取单只宠物 */
